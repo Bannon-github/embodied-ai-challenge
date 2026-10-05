@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "project": "Embodied AI Challenge",
+  "subtitle": "Body V1 — from independent designs to a buildable robot",
+  "updated_at": "2026-10-05",
+  "phase": "pre-Round-1",
+  "round_1_open": false,
+  "reference_simulator": "Webots",
+  "amendment_b_status": "draft-0.1.0",
+  "simulation_status": "not_implemented",
+  "results": null,
+  "source_documents": [
+    {"id": "master-brief-v1", "title": "Frozen Master Brief v1.0", "decision_status": "frozen", "local_status": "canonical_source_missing"},
+    {"id": "amendment-a", "title": "Mandatory Digital Twin Amendment A", "decision_status": "mandatory", "local_status": "canonical_source_missing"}
+  ],
+  "contestants": [
+    {"id": "gemini", "name": "Gemini", "submission_status": "not_open", "feasibility_status": "not_run"},
+    {"id": "grok", "name": "Grok", "submission_status": "not_open", "feasibility_status": "not_run"},
+    {"id": "chatgpt", "name": "ChatGPT", "submission_status": "not_open", "feasibility_status": "not_run"},
+    {"id": "claude", "name": "Claude", "submission_status": "not_open", "feasibility_status": "not_run"},
+    {"id": "meta-ai", "name": "Meta AI", "submission_status": "not_open", "feasibility_status": "not_run"},
+    {"id": "microsoft-copilot", "name": "Microsoft Copilot", "submission_status": "not_open", "feasibility_status": "not_run"}
+  ],
+  "milestones": [
+    {"id": "brief-decision", "title": "Master Brief v1.0 frozen in prior project planning", "status": "completed"},
+    {"id": "digital-twin-decision", "title": "Mandatory digital twin requirements established", "status": "completed"},
+    {"id": "repository", "title": "Repository infrastructure and public site foundation created", "status": "completed"},
+    {"id": "amendment-b-draft", "title": "Amendment B and inherited 14-point gate documented", "status": "completed"},
+    {"id": "canonical-sources", "title": "Recover and verify canonical Brief and Amendment A files", "status": "pending"},
+    {"id": "worlds", "title": "Implement standardized indoor and urban Webots worlds", "status": "pending"},
+    {"id": "harness", "title": "Implement and test import, microphone, protocol and safety harness", "status": "pending"},
+    {"id": "freeze", "title": "Validate on HP OMEN and freeze the identical starter release", "status": "pending"},
+    {"id": "round-1", "title": "Open Round 1 and collect six independent sealed entries", "status": "pending"},
+    {"id": "peer-review", "title": "Lock all six entries, then conduct peer review and revisions", "status": "pending"},
+    {"id": "selection", "title": "Evaluate results and select Body V1 for construction", "status": "pending"}
+  ]
+}

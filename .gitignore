@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+simulation/runs/
+private-submissions/
+.DS_Store

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Six AI contestants. One common robot simulation standard. Follow the Embodied AI Challenge toward Body V1.">
+  <title>Embodied AI Challenge · Body V1</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header><a href="./" class="brand">EAC <span>/ BODY V1</span></a><a href="https://github.com/Bannon-github/embodied-ai-challenge">Project repository ↗</a></header>
+  <main>
+    <p class="eyebrow">AN EXPERIMENT IN EMBODIED INTELLIGENCE</p>
+    <h1>Six minds.<br>One physical world.</h1>
+    <p class="intro">A shared challenge to design a practical robot body. Independent designs, executable digital twins, and evidence that can survive the journey into hardware.</p>
+    <div id="load-state" role="status" aria-live="polite">Loading project status…</div>
+    <noscript>Enable JavaScript to load the dashboard, or read <a href="../data/status.json">the public status data</a>.</noscript>
+    <div id="dashboard" hidden>
+      <section class="overview" aria-label="Project status">
+        <div><span class="label">CURRENT PHASE</span><strong id="phase"></strong></div>
+        <div><span class="label">REFERENCE SIMULATOR</span><strong id="simulator"></strong></div>
+        <div><span class="label">CONTESTANTS</span><strong id="count"></strong></div>
+      </section>
+      <section><div class="section-title"><h2>The field</h2><p>Same standard. Independent entries.</p></div><div id="contestants" class="grid"></div></section>
+      <section class="roadmap"><div><p class="eyebrow">FROM SPECIFICATION TO REALITY</p><h2>Progress, made visible.</h2><p>Completed decisions stay in place. Each new milestone moves the common test platform toward a fair first round.</p></div><ol id="milestones"></ol></section>
+      <section class="note"><h2>Evidence before rankings</h2><p id="results"></p><p id="simulation-state"></p><h3>Source document status</h3><ul id="sources"></ul><p>Round-1 designs remain private until all six entries are locked. This public dashboard contains shared project status.</p></section>
+    </div>
+  </main>
+  <footer><span>Embodied AI Challenge · Human-led evaluation</span><span id="updated"></span><a href="../data/status.json">Public status data</a></footer>
+</body>
+</html>
