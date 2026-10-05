@@ -1,135 +1,171 @@
-# Amendment B — Common Simulation & Submission Standard
+# Amendment B — Body V1 Design Sprint Standard
 
-Version: **0.1.0 infrastructure draft**, 2026-10-05. Applies equally to all six Body V1 contestants. Reference simulator decision: **Webots**. Phase: **pre-Round-1**.
+Version: **0.2.0**, 2026-10-05. Applies equally to all six contestants: Gemini, Grok, ChatGPT, Claude, Meta AI, Microsoft Copilot.
 
-This defines the implementation contract extending the frozen Master Brief v1.0 and Mandatory Amendment A. It does not replace either document, reopen their design decisions, or claim the starter simulator is already implemented. Canonical-source recovery is tracked in [SOURCE-DOCUMENTS-TODO.md](SOURCE-DOCUMENTS-TODO.md). All numeric test defaults below are proposed common baseline parameters to validate on the HP OMEN and freeze before Round 1; no contestant-specific relaxation is permitted.
+**Decision of the project lead, 2026-10-05:** Body V1 is a 48-hour design sprint followed by building one real robot by Monday, October 19, 2026. This replaces Amendment B 0.1.0 for Body V1. The full simulation standard and Amendment A's 14-point digital-twin gate are not discarded: they are deferred to Body V2, which will use the finished Body V1 robot as its reference hardware. See [Body V2 deferred documents](body-v2/amendment-b-0.1.0-full-simulation-standard.md).
 
-## 1. Release and reproducibility
+The frozen Master Brief v1.0 and Mandatory Amendment A are not rewritten here. Their canonical files are still missing ([TODO](SOURCE-DOCUMENTS-TODO.md)). Where a Body V1 rule below differs from them, it is a recorded decision by the project lead for this edition only, and must be reconciled against the canonical text once recovered.
 
-The organizer shall distribute a versioned release containing the exact Webots version and installer checksum, supported Windows version, controller runtime and dependency lockfiles, reference PC/GPU/driver description, world and asset hashes, interface version, scoring configuration, calibration evidence, and run instructions. An unpinned dependency or missing world blocks the release.
+## 1. The goal
 
-Use a fixed 32 ms physics step, synchronized controllers, explicit nonnegative world seeds, and a fresh world reload for each trial. Record simulator seed separately from agent, sensor-noise, and failure-schedule seeds. Baseline development seeds: 101, 202, 303; held-out evaluation seeds use the same declared distributions and are released with results. Record platform drift; seeded physics is not a promise of identical outputs across platforms or nondeterministic cloud models.
+One autonomous robot that **sees, hears, moves, grabs and speaks**, built from the lead's existing parts, for **at most $100 USD of new purchases**, finished by **October 19, 2026**. A PC agent turns the robot's camera, microphone and sensor data into an awareness of its surroundings and talks with the lead.
 
-Run each baseline world/seed three times. Preserve all trials, including failures; do not select only the best run. Live microphone and cloud-agent sessions record timing and model/service versions. Audio replay may support repeatability but cannot replace the live microphone gate.
+Every entry is judged on whether the lead, working alone in a bedroom with the tools listed below, can actually build it in the time and budget.
 
-Webots API references: [WorldInfo](https://cyberbotics.com/doc/reference/worldinfo), [controller stepping](https://github.com/cyberbotics/webots/blob/master/docs/guide/controller-programming.md), [Supervisor](https://github.com/cyberbotics/webots/blob/master/docs/reference/supervisor.md). The organizer's Supervisor owns evaluation ground truth; contestant controllers must not obtain privileged world state or mutate the world.
+## 2. Timeline
 
-## 2. Standard test worlds
+All times are Pacific (UTC−7).
 
-World files and fixture assets are organizer-owned. These are construction specifications, not existing `.wbt` assets. Use metres, kilograms, seconds, radians, and an explicitly ENU world frame (X east, Y north, Z up). Supply a dimensioned plan, collision geometry, surface coefficients, lighting configuration, spawn zones, and asset licenses with each world.
-
-| World | Required fixtures and proposed baseline geometry |
+| When | What |
 | --- | --- |
-| `indoor-v1` | 12 m × 10 m enclosed layout: bedroom, living room, kitchen, hallway; 0.90 m clear doorways and 1.20 m hallway; tables, chairs, movable clutter, walls; hard floor/carpet transition and 0.015 m threshold; dock, designated human and inspection object |
-| `urban-v1` | 20 m × 20 m bounded pedestrian area: 1.50 m sidewalk, 0.15 m curb, 1.20 m wide accessible ramp at 1:12 slope, building entrance, paved plaza, street furniture, uneven paving up to 0.02 m, stationary and moving obstacles |
+| Oct 5 | Sprint brief (this document plus §3 inventory) sent identically to all six |
+| Oct 7, 12:00 | Entries due. Late entries are recorded but not scored |
+| Oct 7 | Lead scores entries, then selects one design or merges the best parts |
+| Oct 8 – Oct 18 | Build, following the selected design |
+| Oct 19 | Demo day: the §8 demo checks |
 
-Curbs are obstacles, not mandatory climbing challenges; an accessible alternative route must exist. No traffic-lane traversal is required. Pedestrians are simulated fixtures; no physical human test is implied. Seeded placement varies human/object/clutter locations within valid zones while preserving traversable routes. Publish placement distributions, route-clearance checks, pedestrian trajectories and friction values at freeze. Unknown properties remain TODO rather than silently assumed.
+If the lead orders parts before selection to protect the schedule, those parts and their prices are listed in `data/status.json` under `sprint.pre_ordered`. They count toward every entry's $100 and are on hand for every entry.
 
-Each world supports the twelve-stage mission: wake from dock → locate human → approach → orient → interact → choose permitted task → navigate → inspect → remember → return → report → dock. Fixtures identify the designated person and task through perceivable cues, not coordinates supplied to the agent. Initial acceptance defaults: stop 0.8–1.5 m from the person, orient within 20 degrees, save a retrievable observation event, report its content, and finish within 600 simulated seconds. Dock success requires stable pose within 0.10 m and 10 degrees for 2 seconds plus modeled charging state. Supervisor verifies stages from observations and ground truth; claimed completion messages alone are insufficient.
+## 3. Inventory (free to use, $0)
 
-## 3. Robot and digital-twin import contract
+Verified by the lead's description on 2026-10-05. Items marked *confirm* have a detail the entry must not assume.
 
-Each package includes `submission.json` with `schema_version`, `contestant_id`, `entry_version`, `contract_version`, exact `webots_version`, relative `robot_proto`, `controller`, `assets`, `dependencies`, `hal_version`, `capabilities`, `physical_parameters`, and `limitations`. Asset entries include relative path, SHA-256, license, and purpose. Reject absolute paths, parent traversal, missing files, external unpinned assets, and incompatible versions before executing code.
+| Item | Notes |
+| --- | --- |
+| HP OMEN laptop | Robot's main compute. Runs speech, planning, vision-language model, agent, message broker |
+| Dual-band home router | Omen on 5 GHz. Robot boards need 2.4 GHz (*confirm* 2.4 GHz is enabled) |
+| 3 × ESP32 Wi-Fi/Bluetooth boards | Generic ESP32 dev boards |
+| ESP32-S3 board with 1.47" 172×320 LCD | 2.4 GHz Wi-Fi, Bluetooth 5, RGB LED |
+| Raspberry Pi Zero with AI camera module | *confirm* Zero, Zero W or Zero 2 W, and camera model |
+| Robot vacuums (2 or more), for parts | Chassis, wheel modules, bump/cliff sensors, speaker, IR receiver, possibly a working battery pack |
+| Larger stepper motors | |
+| Several Lego DC motors and a lot of Lego | |
+| Bluetooth dual bidirectional DC motor controller | *confirm* driver chip and voltage/current rating |
+| 50+ lithium-ion cells, mixed shapes and sizes | Salvaged, condition unknown |
+| Saturn Ultra 6K Pro resin printer | Tough, rubber and regular resin |
+| Flipper Zero | Infrared, GPIO, USB-UART |
+| LoRa module | |
+| 405 nm laser module | **Excluded**: must not be mounted on the robot (eye-injury risk on an autonomous platform) |
+| Soldering iron, solder, rosin, helping hands, multimeter | |
 
-Provide a self-contained Webots PROTO with translation, rotation, name, and controller fields, physical collision bodies and devices. Controller runs without Supervisor privileges. Organizer imports it at a world-defined spawn pose; contestants cannot replace the test world. Include required mesh/texture assets and an exact device-name-to-HAL mapping. A clean install must work without manual path repairs.
+Anything else counts against the $100. Prices in the BOM are dated, sourced from a seller who can deliver by Oct 9, and include shipping and tax estimate.
 
-Include an independently inspectable complete assembly (STEP for mechanical geometry where applicable, GLB/glTF for visual assembly; STL/3MF for fabricated parts), with named major components and units. Every major component maps to a BOM ID, dimensions, mass estimate, evidence source, tolerances, and measured/manufacturer/assumed status. Unknown salvaged-part dimensions must remain explicitly unverified. Provide exploded/assembly views, ordered construction demonstration and functional animation matching the submitted revision. Animations do not count as physics evidence.
+## 4. The mission
 
-## 4. Hardware abstraction layer (HAL)
+The robot is in a bedroom. The lead says something like "find my cup and bring it to me."
 
-The high-level agent uses the same application interface for simulated and future physical hardware. Implement `connect`, `describe_capabilities`, `read_observation`, `request_action`, `cancel_action`, `stop`, and `read_health`. Requests are asynchronous with a command ID and accepted/rejected/completed/failed/cancelled lifecycle. Navigation, approach, observe, speak, display, remember and dock are bounded high-level actions; adapters translate them to device-specific control.
+1. **Hear**: the request is captured by a microphone on the robot (a PC microphone is an allowed fallback, and the entry must say which).
+2. **Find**: the robot searches the room and recognizes the named object with its camera.
+3. **Grab**: the robot approaches and picks up the object. It detects whether the grab succeeded.
+4. **Return**: the robot brings the object back to the lead.
+5. **Speak**: the robot releases the object and says what it did, through a speaker on the robot.
 
-Observations carry sensor ID, timestamp, units, coordinate frame, validity, age and uncertainty. Invalid/stale sensors are never silently represented as valid zeros. Sensor capabilities match proposed physical hardware: camera, audio, encoders, IMU, range, bumper/cliff, battery and docking as applicable. Document rates, calibration, noise, delays and unsupported capabilities. Never expose Supervisor ground truth as a simulated physical sensor. Simulated and real adapters share contract tests; an unsupported action returns `UNSUPPORTED_CAPABILITY`.
+Awareness: the PC agent keeps a memory of what it has seen and where, and can answer "where did you last see my keys?" by voice and in a text chat page on the PC.
 
-## 5. PC microphone → speech → agent → robot
+## 5. PC ↔ robot connection
 
-The evaluator selects a PC input device, sees capture state, and speaks live. Pipeline: microphone capture → timestamped audio chunk → speech recognition → transcript/confidence → intent interpretation → agent action request → deterministic safety check → robot adapter → acknowledgement/result → PC speech/display response. Every boundary emits correlated events. The microphone test must produce an appropriate observable action, not just a transcript.
+The reference connection, consistent with the project's working build plan:
 
-Document local/cloud ASR dependencies, language, device selection, permissions, model version, latency and cost. Ambiguous speech requires clarification without movement. ASR/API timeout causes no newly inferred motion; existing motion remains bounded by its local deadline. A keyboard emergency-stop control is independent of ASR and agent availability. Raw audio is ephemeral by default; any retained test recording requires evaluator consent and a documented retention/deletion policy. Publish redacted event traces, not private speech or private chain-of-thought.
+- The Omen hosts an **MQTT broker** on the home network. Every robot board connects to it over 2.4 GHz Wi-Fi.
+- Microphone audio goes up and speech audio comes down over UDP. Camera video goes to the PC as a compressed stream (MJPEG, RTSP or H.264).
+- **Tailscale** is only for reaching the PC or robot from outside the home. It is not required on the robot's boards.
 
-## 6. Secure PC ↔ robot protocol
+Minimum security for Body V1:
 
-Reference network profile: versioned JSON over WebSocket over TLS, with mutual certificate authentication and explicit device enrollment. Pin trusted device identities, validate server identity, generate per-install credentials, and keep private keys outside the repository. No anonymous fallback or certificate-validation bypass. A non-network simulator adapter may be used for unit tests, but does not satisfy the authenticated connection gate.
+- Each board has its own MQTT username and password. No anonymous connections. A broker access list limits each board to its own topics.
+- The broker is reachable only on the home network: Windows firewall rule on the private profile, no router port forwarding.
+- Credentials stay out of Git (`.gitignore` already blocks `.env`, `*.key`, `*.pem`).
+- TLS on MQTT (port 8883) is a stretch goal for Body V1 and required in Body V2.
 
-Negotiate protocol major version and capabilities before arming. Envelopes include version, session ID, unique message/command ID, sender/recipient, strictly increasing sequence, type, payload and bounded validity duration. Authenticate before processing, enforce payload/schema/size limits, reject replay/out-of-order/stale commands, and acknowledge acceptance separately from completion. An acknowledgement lost in transit must not cause duplicate physical action: retries with the same ID return the recorded result within a bounded session cache; a new session never replays prior motion.
+Entries may use a different transport if they justify it and keep these guarantees.
 
-Proposed profile: heartbeat every 100 ms; loss after 500 ms; motion command lifetime at most 250 ms; maximum JSON envelope 64 KiB (media uses bounded separate transfer). Receiver measures leases with its own monotonic clock. Reconnect uses capped exponential backoff and establishes a fresh authenticated session while disarmed. Reconnection never resumes movement automatically. Report authentication, timeout, disconnect and recovery reason codes without secrets. Test malformed frames, unknown identity, expired certificate, version mismatch, replay and packet loss. Document provisioning, credential rotation/revocation and physical transport alternatives; an alternative must preserve these guarantees and pass the common suite before acceptance.
+## 6. Common robot interface
 
-## 7. Telemetry and event schema
+The agent on the PC never sends raw motor commands. It picks **behaviours** (explore, find, approach, grab, return, release, speak, stop), and code on the PC and the boards carries them out. This is the hardware abstraction layer: the same behaviour names work in an optional simulation and on the real robot.
 
-Append one UTF-8 JSON object per line to `events.jsonl`. Required envelope:
+Reference MQTT topics (JSON payloads). Entries may add topics, and must map any renamed ones to these:
+
+| Topic | Direction | Payload |
+| --- | --- | --- |
+| `robot/drive/cmd` | PC → drive board | `{"v": m/s, "w": rad/s, "ttl_ms": ≤300}` |
+| `robot/drive/state` | drive board → PC | odometry, bump, cliff, battery volts |
+| `robot/safety/cmd` | PC → drive board | `{"cmd": "arm" \| "stop" \| "reset"}` |
+| `robot/safety/state` | drive board → PC | `{"state": "DISARMED" \| "ARMED" \| "STOPPED" \| "ESTOP", "reason": ...}` |
+| `robot/gripper/cmd` | PC → hand board | `{"cmd": "open" \| "close" \| "lift" \| "lower"}` |
+| `robot/gripper/state` | hand board → PC | position, `holding` true/false |
+| `robot/vision/detections` | camera → PC | `[{"label", "confidence", "box": [x, y, w, h]}]`, frame time |
+| `robot/head/face` | PC → head board | expression, speaking true/false |
+| `robot/<board>/health` | each board → PC | uptime, Wi-Fi signal, free memory, every 1 s |
+
+Every board publishes a retained `online`/`offline` status using MQTT's last-will message.
+
+## 7. Safety (must pass, not scored)
+
+An entry that misses any item below is rejected, however good the rest is.
+
+1. **Local stop timer.** The drive board stops the motors on its own if no valid drive command arrives within 300 ms. Wi-Fi loss or a PC crash therefore stops the robot.
+2. **Wireless kill switch independent of Wi-Fi.** Default: the vacuum's IR receiver, triggered by the Flipper Zero's infrared remote, latches ESTOP on the drive board.
+3. **Bump and cliff stops** handled on the drive board, not the PC.
+4. **Safe startup and reset.** The robot starts DISARMED. After any stop, reset returns to DISARMED, and moving again needs a new arm command.
+5. **Speed limit** of 0.30 m/s, enforced on the drive board.
+6. **Battery safety.** Prefer a working vacuum pack with its own charger. Salvaged cells: triage (discard below 2.0 V, check self-discharge), holder rather than soldered cells, balancing BMS, fuse at the pack, a proper CC/CV charger, supervised charging on a non-flammable surface, and a software low-voltage cutoff.
+7. **No laser** on the robot. Resin parts handled with gloves and fully cured.
+8. **The language model never drives motors.** It only chooses behaviours from §6.
+
+## 8. Gates and scoring
+
+### Entry gate (5 checks, on paper, Oct 7)
+
+| ID | Check |
+| --- | --- |
+| E1 | New-purchase BOM total ≤ $100 USD, including any `pre_ordered` parts, with dated prices |
+| E2 | Uses only §3 inventory plus the BOM; nothing assumed that §3 marks *confirm* without a fallback |
+| E3 | Covers all five mission steps (§4) and the awareness memory |
+| E4 | Meets every §7 safety item |
+| E5 | Day-by-day build schedule from Oct 8 that ends with the demo on Oct 19 |
+
+Each check is recorded as `pass`, `fail` or `not_run` with a one-line reason. Only entries passing all five are scored.
+
+### Scoring (100 points, for entries that pass the gate)
+
+| Criterion | Points |
+| --- | --- |
+| Buildable by one person by Oct 19 with the listed tools | 25 |
+| Mission design, especially the grab and grab-success check | 20 |
+| Reuse of inventory and money left over | 15 |
+| Awareness agent and memory design | 15 |
+| Clear, ordered build and wiring instructions | 15 |
+| Risks named, with fallbacks and a cut list if behind | 10 |
+
+Points guide the decision; the lead makes the final choice and may merge ideas from several entries, crediting each source in `data/status.json`.
+
+### Demo checks (Oct 19, on the real robot)
+
+| ID | Check |
+| --- | --- |
+| D1 | Hears a spoken request and shows the transcript |
+| D2 | Finds the named object |
+| D3 | Grabs it and reports that the grab succeeded |
+| D4 | Returns it to the lead and releases it |
+| D5 | Says what it did, through the robot's speaker |
+| D6 | Safety: kill switch and Wi-Fi-loss stop both work during the demo run |
+
+D6 must pass for the demo to count. The demo is run three times; all three results are recorded, including failures.
+
+## 9. Event log
+
+The PC writes one JSON object per line to `events.jsonl` for each run:
 
 ```json
-{"schema_version":"1.0","run_id":"example-only","event_id":"evt-000001","seq":1,"sim_time_ms":32,"monotonic_ms":1200,"wall_time_utc":"2026-10-05T08:00:00Z","source":"safety","target":"robot","kind":"safety","correlation_id":"cmd-000001","severity":"info","payload":{"state":"DISARMED","reason_code":"STARTUP"}}
+{"schema_version":"1.0","run_id":"2026-10-19-run1","seq":1,"time_utc":"2026-10-19T17:00:00Z","source":"agent","kind":"command","correlation_id":"req-001","payload":{"behaviour":"find","object":"cup"}}
 ```
 
-`seq` is strictly increasing per source per run; IDs are unique within the run. `sim_time_ms` is simulation time; `monotonic_ms` is elapsed recorder time, not comparable across PCs; UTC is for human audit. `kind` is observation, state, command, acknowledgement, error, safety, memory, connection, decision, or metric. Severity is debug/info/warning/error. Correlation ID links speech, command and result; use null for unrelated events. Numeric values must be finite; all measurements declare units and frames in their payload. Keep protocol and telemetry versions independent.
+`kind` is one of observation, state, command, acknowledgement, safety, memory, speech, error. A correlation ID links a spoken request to every command and result it caused. Raw audio is not kept by default. Public logs are redacted of personal speech and room images.
 
-Command payloads include action, parameters and deadline; acknowledgements include status and reason code; sensor payloads include sensor ID, validity and sample time; safety payloads include old/new state, trigger and actuator disposition; memory events include record ID and retention class. Store large assets separately with relative path and checksum. Redact credentials, personal audio and identifying observations before public export. Console renders these structured operational traces; it never requires hidden reasoning tokens. Missing/dropped log records are explicit evidence gaps, never silently treated as successful runs.
+## 10. Simulation
 
-## 8. Deterministic safety interface
+Optional for Body V1, and not scored. An entry may provide a simple simulation (for example a Webots model of a differential-drive vacuum in one bedroom-sized room) to test behaviours before the hardware is ready. It must use the §6 behaviour names so the same agent code drives both. See [simulation/README.md](../simulation/README.md).
 
-States: `DISARMED`, `ARMED`, `STOPPED`, `FAULT`, `ESTOP`. Start DISARMED with actuators disabled. Only an authenticated evaluator arm request plus passing health checks permits ARMED. E-stop, critical sensor invalidity, watchdog loss, expired motion lease, out-of-bounds command or unsafe obstacle distance overrides all agent requests locally. E-stop enters latched ESTOP; critical hardware faults enter FAULT; recoverable timeout enters STOPPED. All inhibit new motion and request a controlled stop, with actuator disable where appropriate to the physical design.
+## 11. Body V2 (deferred)
 
-No network/model response is required to stop. Poll safety every control tick; latch a stop request within one 32 ms tick in simulation. Actual braking time/distance must be measured separately, not inferred from a stop acknowledgement. Default speed cap is 0.30 m/s with lower approach speed; contestant declares stricter limits if needed. Validate braking envelope against obstacle clearance, payload and friction. Apply acceleration, joint, current and battery limits in the deterministic controller.
-
-Reset is an explicit evaluator operation after the cause clears; it returns to DISARMED, never directly to motion. Re-arm and a fresh command are required. Record trigger, decision time, stop onset, final rest and maximum stopping distance. Tests must kill the PC/agent and still demonstrate local safety. Physical realization additionally needs an independent physical emergency disable and validated electrical/battery protections; simulation is not certification of physical safety.
-
-## 9. Physics and parity requirements
-
-Model mass, center of mass, inertia, wheel radius/wheelbase, collision geometry, contact friction, motor torque/speed limits, acceleration, braking, turning, payload distribution, and sensor pose/FOV/range. Declare approximations and source evidence per parameter. No teleporting, animation-driven locomotion, unlimited motors or collision-free bodies in scored runs. Document tolerances and run sensitivity checks for uncertain mass/friction/traction. Energy integrates declared electrical power over simulated time and separates idle, traction, compute and payload loads; simulated estimates are labeled separately from physical measurements.
-
-Account for battery capacity, usable energy, low-voltage threshold and charging state. Document sensor noise/dropout and actuator saturation. If thermal, battery aging, radio propagation or a sensor effect is not modeled, state the limitation. Hardware adapter replacement must not require rewriting the high-level agent, but physical commissioning and calibration remain mandatory future work.
-
-## 10. Failure injection
-
-Organizer schedules injections by mission stage and simulation tick, with recorded seed, duration, magnitude, expected response and observed recovery. Reset the world between scenarios. Run each case in both worlds where applicable and log exceptions explicitly.
-
-| Case | Injection | Expected evidence |
-| --- | --- | --- |
-| Unexpected obstacle / human crossing | Place or move fixture into route during navigation | Local braking, no contact, safe replanning |
-| Blocked route | Block route for 10 simulated seconds, then clear | Wait or alternate path; no privileged coordinates |
-| Wi-Fi loss | Drop traffic for 2 seconds | Watchdog stop; authenticated reconnect; explicit re-arm |
-| Delayed AI / PC loss | Hold agent response for 5 seconds; separate PC process termination | Motion lease expires; independent stop |
-| Sensor fault | Stale critical range for 1 second; separate bounded bias trial | Invalidity detected or residual risk documented; safe fallback |
-| Low battery | Cross declared low-energy threshold mid-task | Safe abort/dock if feasible, otherwise stop |
-| Motor fault | One drive stalls during movement | Fault detection, bounded outputs, safe stop |
-| Protocol faults | Replay, malformed request, untrusted identity | Rejection without movement; redacted reason code |
-| Emergency stop | Trigger while moving and while disconnected | Latched stop; reset alone cannot resume motion |
-
-Do not combine faults until isolated scenarios pass. Report detection and stop latency, contact count, minimum clearance, lost stages, recovery time and operator interventions. Missing execution evidence is `not_run`, never pass.
-
-## 11. Scoring and resource comparison
-
-Feasibility is a prerequisite, not a points bonus. Gate result is pass only when all fourteen items pass with evidence; fail or not_run prevents comparative ranking. A safety violation makes that run ineligible for an aggregate score and remains visible.
-
-For eligible baseline runs, record each mission stage as 0/1 with its evidence. Mission completion percentage = 100 × completed stages / 12. Report full-mission success rate, median/range completion time, collisions, minimum clearance, energy Wh, estimated runtime, CPU/GPU/RAM use, network bytes, API calls/cost, and recovery success count over attempted failure cases. Preserve denominators and failures. Do not average only successful trials.
-
-Publish a comparison table, not an invented overall winner score: additional hardware cost and twelve-month operating cost (CAD, dated estimates and assumptions), reused parts and replacement value, assembly hours, tools/fabrication, maintainability, repairability, autonomy, sensory/interaction capability, memory behavior, network dependence and expansion path. Lower costs are favored for comparable demonstrated capability. No fixed budget ceiling. Missing cost/measurement is unknown, never zero. Any later scalar weights/normalization must be frozen identically before Round 1 and reconciled with the Master Brief. Human project lead makes final selection from complete evidence; no single metric automatically wins.
-
-## 12. Inherited Amendment A feasibility gate
-
-The following item text is inherited from Amendment A §23, retrieved from conversation message `c02aa2b5-c15b-462a-8a4b-e0cbcc313635`. Evidence requirements are new operational details in B, not a fabricated canonical Amendment A file.
-
-| ID | Inherited item | Required evidence |
-| --- | --- | --- |
-| A01 | Open the 3D assembly. | Viewer/version and successful open record |
-| A02 | Inspect major components. | Named parts mapped to BOM and dimensions |
-| A03 | Follow the construction documentation. | Evaluator walkthrough, tools/materials/preparation and checkpoints |
-| A04 | Launch the simulation. | Clean-install launch log and exact versions |
-| A05 | Load a standardized environment. | Organizer world ID and checksum |
-| A06 | Start the robot. | Import/start log and valid health state |
-| A07 | Establish the simulated PC connection. | Authentication/identity/handshake trace |
-| A08 | See telemetry and diagnostic messages. | Valid event log plus console demonstration |
-| A09 | Speak through the PC microphone. | Live device/capture/ASR demonstration |
-| A10 | Cause the robot to interpret the interaction. | Correlated transcript, intent and action request |
-| A11 | Observe an appropriate simulated response/action. | Correlated acknowledgement and observed outcome |
-| A12 | Run the standardized mission. | All stage outcomes and raw run evidence |
-| A13 | Trigger at least one failure condition. | Recorded organizer injection and timestamp |
-| A14 | Observe the documented safety/recovery behavior. | Stop/recovery trace against declared expectation |
-
-Gate records include item ID, `pass`/`fail`/`not_run`, evaluator, UTC time, evidence paths/hashes, notes and failure reason. A12 proves the mission was run, not that every stage succeeded; scored outcomes remain separate. The complete failure suite is additionally required before harness release/acceptance; A13 alone does not waive it.
-
-## 13. Freeze acceptance
-
-Before opening Round 1: verify canonical sources; deliver and clean-install the actual worlds/harness; validate the import/HAL/security/event contracts with a neutral reference robot; demonstrate live microphone, all gate items and failure cases on the HP OMEN; record resource envelope; pin versions/hashes and all test parameters; publish identical starter package and submission deadline to all six. Changes after freeze require a versioned amendment and equal notice. Do not expose any contestant's independent design before all six are locked.
+After Oct 19, Body V2 returns to the full standard: Webots reference worlds, the robot/digital-twin import contract, TLS with per-device certificates, failure injection, Amendment A's 14-point feasibility gate and the resource comparison. The finished Body V1 robot becomes the reference hardware those tests are validated against. Documents: [Amendment B 0.1.0](body-v2/amendment-b-0.1.0-full-simulation-standard.md), [simulation harness](body-v2/simulation-harness.md), [submission contract](body-v2/submission-contract.md).

@@ -1,37 +1,56 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "project": "Embodied AI Challenge",
-  "subtitle": "Body V1 — from independent designs to a buildable robot",
+  "subtitle": "Body V1: a 48-hour design sprint, then one real robot by October 19",
   "updated_at": "2026-10-05",
-  "phase": "pre-Round-1",
-  "round_1_open": false,
-  "reference_simulator": "Webots",
-  "amendment_b_status": "draft-0.1.0",
-  "simulation_status": "not_implemented",
+  "phase": "design-sprint",
+  "phase_label": "Design sprint: brief ready",
+  "entries_open": false,
+  "spec": "spec/amendment-b-common-simulation-standard.md",
+  "spec_version": "0.2.0",
+  "sprint": {
+    "budget_usd": 100,
+    "brief_issued": null,
+    "entries_due": "2026-10-07T12:00:00-07:00",
+    "selection_by": "2026-10-07",
+    "build_start": "2026-10-08",
+    "demo_day": "2026-10-19",
+    "mission": ["Hear", "Find", "Grab", "Return", "Speak"],
+    "pre_ordered": [],
+    "pre_ordered_total_usd": 0
+  },
+  "selection": null,
   "results": null,
   "source_documents": [
     {"id": "master-brief-v1", "title": "Frozen Master Brief v1.0", "decision_status": "frozen", "local_status": "canonical_source_missing"},
-    {"id": "amendment-a", "title": "Mandatory Digital Twin Amendment A", "decision_status": "mandatory", "local_status": "canonical_source_missing"}
+    {"id": "amendment-a", "title": "Mandatory Digital Twin Amendment A", "decision_status": "deferred_to_body_v2", "local_status": "canonical_source_missing"}
   ],
   "contestants": [
-    {"id": "gemini", "name": "Gemini", "submission_status": "not_open", "feasibility_status": "not_run"},
-    {"id": "grok", "name": "Grok", "submission_status": "not_open", "feasibility_status": "not_run"},
-    {"id": "chatgpt", "name": "ChatGPT", "submission_status": "not_open", "feasibility_status": "not_run"},
-    {"id": "claude", "name": "Claude", "submission_status": "not_open", "feasibility_status": "not_run"},
-    {"id": "meta-ai", "name": "Meta AI", "submission_status": "not_open", "feasibility_status": "not_run"},
-    {"id": "microsoft-copilot", "name": "Microsoft Copilot", "submission_status": "not_open", "feasibility_status": "not_run"}
+    {"id": "gemini", "name": "Gemini", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
+    {"id": "grok", "name": "Grok", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
+    {"id": "chatgpt", "name": "ChatGPT", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
+    {"id": "claude", "name": "Claude", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
+    {"id": "meta-ai", "name": "Meta AI", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
+    {"id": "microsoft-copilot", "name": "Microsoft Copilot", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null}
   ],
   "milestones": [
-    {"id": "brief-decision", "title": "Master Brief v1.0 frozen in prior project planning", "status": "completed"},
-    {"id": "digital-twin-decision", "title": "Mandatory digital twin requirements established", "status": "completed"},
-    {"id": "repository", "title": "Repository infrastructure and public site foundation created", "status": "completed"},
-    {"id": "amendment-b-draft", "title": "Amendment B and inherited 14-point gate documented", "status": "completed"},
-    {"id": "canonical-sources", "title": "Recover and verify canonical Brief and Amendment A files", "status": "pending"},
-    {"id": "worlds", "title": "Implement standardized indoor and urban Webots worlds", "status": "pending"},
-    {"id": "harness", "title": "Implement and test import, microphone, protocol and safety harness", "status": "pending"},
-    {"id": "freeze", "title": "Validate on HP OMEN and freeze the identical starter release", "status": "pending"},
-    {"id": "round-1", "title": "Open Round 1 and collect six independent sealed entries", "status": "pending"},
-    {"id": "peer-review", "title": "Lock all six entries, then conduct peer review and revisions", "status": "pending"},
-    {"id": "selection", "title": "Evaluate results and select Body V1 for construction", "status": "pending"}
+    {"id": "brief-decision", "title": "Master Brief v1.0 frozen in prior project planning", "status": "completed", "date": null},
+    {"id": "digital-twin-decision", "title": "Digital twin requirements established (Amendment A)", "status": "completed", "date": null},
+    {"id": "repository", "title": "Repository infrastructure and public site created", "status": "completed", "date": "2026-10-05"},
+    {"id": "sprint-decision", "title": "Body V1 changed to a design sprint; full simulation deferred to Body V2", "status": "completed", "date": "2026-10-05"},
+    {"id": "sprint-brief", "title": "Send the identical sprint brief to all six contestants", "status": "pending", "date": null},
+    {"id": "entries-locked", "title": "Collect and lock all six entries", "status": "pending", "date": "2026-10-07"},
+    {"id": "selection", "title": "Score entries and select or merge the design", "status": "pending", "date": "2026-10-07"},
+    {"id": "build", "title": "Build the robot", "status": "pending", "date": "2026-10-18"},
+    {"id": "demo", "title": "Demo day: Hear, Find, Grab, Return, Speak", "status": "pending", "date": "2026-10-19"},
+    {"id": "canonical-sources", "title": "Recover and verify canonical Master Brief and Amendment A files", "status": "pending", "date": null}
+  ],
+  "deferred_to_body_v2": [
+    "Webots reference worlds (indoor and urban)",
+    "Robot and digital-twin import contract",
+    "TLS with per-device certificates",
+    "Failure injection suite",
+    "Amendment A 14-point feasibility gate",
+    "Resource and twelve-month cost comparison"
   ]
 }

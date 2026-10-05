@@ -1,36 +1,44 @@
-# Round-1 submission contract
+# Contestants: Body V1 sprint entries
 
-Contestants: `gemini`, `grok`, `chatgpt`, `claude`, `meta-ai`, `microsoft-copilot`. Current phase is **pre-Round-1**; no submissions are recorded.
+Contestants: `gemini`, `grok`, `chatgpt`, `claude`, `meta-ai`, `microsoft-copilot`. Rules: [Amendment B 0.2.0](../spec/amendment-b-common-simulation-standard.md). Entries are due **October 7, 2026, 12:00 Pacific**.
 
-All six receive identical frozen Master Brief v1.0, Mandatory Amendment A, finalized Amendment B, starter release and deadline. Do not submit another contestant's design to an AI before that AI's Round-1 design is locked. Keep original packages in private organizer-controlled storage; public branches, public PRs and commit history cannot enforce blindness. Public status contains milestones only. Publish packages together after all six have been locked, retaining original hashes and attribution.
+## What each contestant receives
 
-## Package layout
+The same message to all six: the full text of Amendment B 0.2.0 (it contains the inventory, mission, interface, safety rules, gates and scoring) and the request to return an entry in the layout below. Nothing else, and in particular no other contestant's design or the project's existing build plan, which is itself a candidate design.
 
-Use `<contestant-id>/round-1/<entry-version>/` inside the sealed delivery archive. This naming also applies when entries are eventually released here.
+## Entry layout
 
 ```text
-README.md             # complete independent installation/operation guide
-submission.json       # Amendment B manifest, relative paths and SHA-256 assets
-docs/design.md        # Master Brief sections A–V in original order
-bom/                  # parts, quantities, reuse, costs, sources, fallbacks
-cad/                  # inspectable mechanical interchange and native sources
-models/               # named visual assembly, textures, component mapping
-simulation/           # Webots robot PROTO, controllers and dependency locks
-firmware/             # sources, versions, programming and safe startup steps
-pc-software/          # microphone, ASR, agent bridge, console
-protocol/             # schema, security provisioning, connection lifecycle
-tests/                # gate, mission, failure and adapter parity evidence
-logs/                 # redacted genuine results; distinguish estimates
-construction/         # tools, materials, preparation, ordered build checkpoints
-animations/           # reproducible assembly and functional demonstrations
+contestants/<contestant-id>/sprint/
+├── plan.md        The design, with the sections below
+├── bom.csv        item, qty, source, url, price_usd, price_date, in_inventory (yes/no)
+└── extras/        Optional: CAD, sketches, simulation, code
 ```
 
-If an area is inapplicable, provide a README explaining why; omission is not implicit exemption. Include asset licenses and exact dependency versions. Never include passwords, API keys, private certificates, personal recordings or unredacted home imagery.
+`plan.md` sections, in this order:
 
-README must cover requirements, installation, dependencies, layout, environment launch, robot import/start, PC software start, authenticated connection and verification, microphone selection, mission, disturbances, logs, CAD inspection, construction demonstration, clean shutdown and troubleshooting. Charging, battery inspection, firmware preparation, calibration and network setup belong in explicit preparation instructions.
+1. Summary (one paragraph)
+2. Board roles and how they connect to the PC (map to the Amendment B §6 topics)
+3. Drive: chassis, motors, motor driver
+4. Gripper: design, parts, how a successful grab is detected
+5. Power and battery safety
+6. Seeing, hearing and speaking
+7. Awareness agent and memory on the PC
+8. Safety: how each Amendment B §7 item is met
+9. Day-by-day schedule, Oct 8 to Oct 19
+10. Risks, fallbacks, and what to cut first if behind
+11. How each demo check D1 to D6 will be tested
 
-Recovered A–V headings for navigation (not a replacement canonical brief): executive concept; system architecture; physical design; sensor system; compute architecture; communications; power architecture; bill of materials; reused hardware; software stack; AI interface; autonomy architecture; memory architecture; safety architecture; simulation; mission results; failure tests; expansion path; construction plan; resource summary; major compromises; why this architecture. Verify against the canonical source before release.
+Keep `plan.md` under about 4,000 words. Unknowns are written as unknowns, never guessed as facts.
 
-## Organizer receipt and lock
+## Keeping entries independent
 
-Record contestant/model version, entry version, receipt UTC, source release hash, archive SHA-256 and declared limitations. Store the untouched original. Run preflight in an isolated evaluation environment; an untrusted submission may contain executable code. Record each feasibility item as pass/fail/not_run with evidence. No admission or results exist until observed by the evaluator. Corrections are new immutable versions, never silent replacements. Lock all six before peer review (up to 30 cross-reviews); retain Round-1 originals when Round-3 revisions arrive.
+1. The lead pastes each AI's reply into `private-submissions/<contestant-id>/` (ignored by Git) and does not show it to any other contestant.
+2. When an entry arrives, the lead records its SHA-256 in `data/status.json` (`entry_sha256`) and sets `entry_status` to `locked`. In PowerShell: `Get-FileHash private-submissions\<id>\plan.md`.
+3. After all six are locked or the deadline passes, entries are copied into `contestants/<id>/sprint/` together, and must match their recorded hashes.
+
+A changed entry after locking is a new version and is marked as such.
+
+## Recording results
+
+For each entry, record gate checks E1 to E5 as `pass`, `fail` or `not_run` with a one-line reason in `contestants/<id>/sprint/gate.json`, then its score out of 100. Update `entry_gate` and `score` in `data/status.json`, and when the lead decides, fill in `selection` with the chosen entry (or the merged parts and who each came from).
