@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "project": "Embodied AI Challenge",
   "subtitle": "Body V1: a 48-hour design sprint, then one real robot by October 19",
-  "updated_at": "2026-10-05",
+  "updated_at": "2026-10-06",
   "phase": "design-sprint",
   "phase_label": "Design sprint: brief ready",
   "entries_open": false,
@@ -29,7 +29,7 @@
     {"id": "gemini", "name": "Gemini", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
     {"id": "grok", "name": "Grok", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
     {"id": "chatgpt", "name": "ChatGPT", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
-    {"id": "claude", "name": "Claude", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
+    {"id": "claude", "name": "Claude", "entry_status": "locked", "entry_gate": "not_run", "score": null, "entry_sha256": "03e19c45620368a5fecaa704441b34d016102d3d1414270c13d8729b638a1fb5"},
     {"id": "meta-ai", "name": "Meta AI", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null},
     {"id": "microsoft-copilot", "name": "Microsoft Copilot", "entry_status": "not_submitted", "entry_gate": "not_run", "score": null, "entry_sha256": null}
   ],
